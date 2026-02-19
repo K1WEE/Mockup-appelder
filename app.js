@@ -1,5 +1,5 @@
 /* ============================================================
-   HeartLink Family MVP — Interactive Mockup
+   Aoon-Jai Family MVP — Interactive Mockup
    ============================================================
    Features:
    - Splash screen animation
