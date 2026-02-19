@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeartLink — ส่งความรักถึงบ้าน</title>
+    <meta name="description"
+        content="HeartLink connects Thai families with elderly parents through emotional content — videos, voice messages, and photos delivered automatically.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- ===== SPLASH SCREEN ===== -->
+    <div id="splash-screen" class="splash">
+        <div class="splash-content">
+            <div class="splash-heart" id="splash-heart">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                    <path
+                        d="M50 88 C25 65, 0 45, 0 28 C0 12, 12 0, 28 0 C38 0, 46 6, 50 14 C54 6, 62 0, 72 0 C88 0, 100 12, 100 28 C100 45, 75 65, 50 88Z"
+                        fill="url(#heartGrad)" />
+                    <defs>
+                        <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#FF6B6B" />
+                            <stop offset="100%" stop-color="#FFC857" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1 class="splash-title">HeartLink</h1>
+            <p class="splash-subtitle">ส่งความรักถึงบ้าน</p>
+        </div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
+    <div id="app" class="app hidden">
+
+        <!-- TOP NAV -->
+        <nav class="top-nav">
+            <div class="nav-left">
+                <div class="nav-heart-icon">
+                    <svg viewBox="0 0 100 100" width="28" height="28">
+                        <path
+                            d="M50 88 C25 65, 0 45, 0 28 C0 12, 12 0, 28 0 C38 0, 46 6, 50 14 C54 6, 62 0, 72 0 C88 0, 100 12, 100 28 C100 45, 75 65, 50 88Z"
+                            fill="url(#navHeartGrad)" />
+                        <defs>
+                            <linearGradient id="navHeartGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#FF6B6B" />
+                                <stop offset="100%" stop-color="#FFC857" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="nav-brand">HeartLink</span>
+            </div>
+            <div class="nav-right">
+                <div class="streak-badge" id="streak-badge">
+                    <span class="streak-fire">🔥</span>
+                    <span class="streak-count" id="streak-count">5</span>
+                </div>
+                <button class="nav-avatar" id="nav-avatar" aria-label="Profile">
+                    <span>อ</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- ===== PARENT CARD ===== -->
+        <section class="parent-section" id="parent-section">
+            <div class="parent-card">
+                <div class="parent-avatar-ring">
+                    <div class="parent-avatar">
+                        <span>👵</span>
+                    </div>
+                    <div class="status-dot active" title="Active"></div>
+                </div>
+                <div class="parent-info">
+                    <h2 class="parent-name">คุณยายสมศรี</h2>
+                    <p class="parent-relation">ยาย · เชียงใหม่</p>
+                </div>
+                <div class="parent-activity">
+                    <div class="activity-pill">
+                        <span class="activity-icon">👁</span>
+                        <span>ดู 3 ข้อความวันนี้</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== HEART PULSE ===== -->
+        <section class="pulse-section">
+            <button class="heart-pulse-btn" id="heart-pulse-btn" aria-label="Send Heart Pulse">
+                <div class="pulse-ring pulse-ring-1"></div>
+                <div class="pulse-ring pulse-ring-2"></div>
+                <div class="pulse-ring pulse-ring-3"></div>
+                <div class="heart-icon-inner">
+                    <svg viewBox="0 0 100 100" width="44" height="44">
+                        <path
+                            d="M50 88 C25 65, 0 45, 0 28 C0 12, 12 0, 28 0 C38 0, 46 6, 50 14 C54 6, 62 0, 72 0 C88 0, 100 12, 100 28 C100 45, 75 65, 50 88Z"
+                            fill="#fff" />
+                    </svg>
+                </div>
+            </button>
+            <p class="pulse-label" id="pulse-label">แตะเพื่อส่งความคิดถึง</p>
+        </section>
+
+        <!-- ===== QUICK ACTIONS ===== -->
+        <section class="actions-section" id="actions-section">
+            <h3 class="section-title">ส่งความรัก</h3>
+            <div class="action-grid">
+                <button class="action-card" id="action-photo" data-type="photo">
+                    <div class="action-icon-wrap photo-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                    </div>
+                    <span class="action-label">รูปภาพ</span>
+                </button>
+                <button class="action-card" id="action-voice" data-type="voice">
+                    <div class="action-icon-wrap voice-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            <line x1="12" y1="19" x2="12" y2="23" />
+                            <line x1="8" y1="23" x2="16" y2="23" />
+                        </svg>
+                    </div>
+                    <span class="action-label">เสียง</span>
+                </button>
+                <button class="action-card" id="action-video" data-type="video">
+                    <div class="action-icon-wrap video-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="23 7 16 12 23 17 23 7" />
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                        </svg>
+                    </div>
+                    <span class="action-label">วิดีโอ</span>
+                </button>
+                <button class="action-card" id="action-text" data-type="text">
+                    <div class="action-icon-wrap text-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                    </div>
+                    <span class="action-label">ข้อความ</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== CONTENT FEED ===== -->
+        <section class="feed-section" id="feed-section">
+            <div class="feed-header">
+                <h3 class="section-title">ความรักที่ส่งไปแล้ว</h3>
+                <button class="filter-btn" id="filter-btn">ทั้งหมด ▾</button>
+            </div>
+
+            <div class="feed-list" id="feed-list">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ===== ACTIVITY LOG ===== -->
+        <section class="activity-section" id="activity-section">
+            <h3 class="section-title">กิจกรรมของคุณยาย</h3>
+            <div class="activity-timeline" id="activity-timeline">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ===== BOTTOM NAV ===== -->
+        <nav class="bottom-nav" id="bottom-nav">
+            <button class="bnav-item active" data-tab="home" aria-label="Home">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span>หน้าหลัก</span>
+            </button>
+            <button class="bnav-item" data-tab="schedule" aria-label="Schedule">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>ตารางเวลา</span>
+            </button>
+            <button class="bnav-item" data-tab="activity" aria-label="Activity">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                <span>กิจกรรม</span>
+            </button>
+            <button class="bnav-item" data-tab="settings" aria-label="Settings">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+                <span>ตั้งค่า</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ===== UPLOAD MODAL ===== -->
+    <div class="modal-overlay" id="upload-modal" role="dialog" aria-modal="true" aria-label="Upload content">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">ส่งรูปภาพ</h3>
+                <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- PHOTO UPLOAD -->
+                <div class="upload-zone" id="upload-zone">
+                    <div class="upload-zone-inner" id="upload-drop-zone">
+                        <div class="upload-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                        </div>
+                        <p class="upload-text">แตะเพื่อเลือกไฟล์</p>
+                        <p class="upload-hint">รองรับ JPG, PNG, MP4 (สูงสุด 50MB)</p>
+                        <input type="file" id="file-input" accept="image/*,video/*" class="sr-only">
+                    </div>
+                </div>
+
+                <!-- VOICE RECORDER -->
+                <div class="voice-recorder hidden" id="voice-recorder">
+                    <div class="recorder-visualizer" id="recorder-visualizer">
+                        <div class="visualizer-bars">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <p class="recorder-timer" id="recorder-timer">0:00</p>
+                    <p class="recorder-hint">สูงสุด 60 วินาที</p>
+                    <button class="record-btn" id="record-btn" aria-label="Record">
+                        <div class="record-dot" id="record-dot"></div>
+                    </button>
+                    <p class="record-label" id="record-label">แตะเพื่อบันทึก</p>
+                </div>
+
+                <!-- PREVIEW -->
+                <div class="preview-area hidden" id="preview-area">
+                    <img id="preview-img" class="preview-img hidden" alt="Preview">
+                    <video id="preview-video" class="preview-video hidden" controls></video>
+                    <audio id="preview-audio" class="preview-audio hidden" controls></audio>
+                </div>
+
+                <!-- CAPTION -->
+                <div class="caption-area" id="caption-area">
+                    <textarea class="caption-input" id="caption-input"
+                        placeholder="เขียนข้อความให้คุณยาย... (ไม่จำเป็น)" rows="2" maxlength="200"></textarea>
+                    <div class="caption-counter"><span id="char-count">0</span>/200</div>
+                </div>
+
+                <!-- QUICK MESSAGES -->
+                <div class="quick-messages" id="quick-messages">
+                    <button class="quick-msg" data-msg="คิดถึงนะคะ ❤️">คิดถึงนะคะ ❤️</button>
+                    <button class="quick-msg" data-msg="สวัสดีตอนเช้าค่ะ ☀️">สวัสดีตอนเช้าค่ะ ☀️</button>
+                    <button class="quick-msg" data-msg="ทานข้าวหรือยังคะ 🍚">ทานข้าวหรือยังคะ 🍚</button>
+                    <button class="quick-msg" data-msg="รักนะคะ 💕">รักนะคะ 💕</button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="schedule-btn" id="schedule-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    ตั้งเวลา
+                </button>
+                <button class="send-btn" id="send-btn">
+                    ส่งเลย
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHEDULE MODAL ===== -->
+    <div class="modal-overlay" id="schedule-modal" role="dialog" aria-modal="true" aria-label="Schedule content">
+        <div class="modal-sheet schedule-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h3 class="modal-title">ตั้งเวลาส่ง</h3>
+                <button class="modal-close schedule-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="schedule-form">
+                    <div class="schedule-field">
+                        <label for="schedule-date">📅 วันที่</label>
+                        <input type="date" id="schedule-date" class="schedule-input">
+                    </div>
+                    <div class="schedule-field">
+                        <label for="schedule-time">⏰ เวลา</label>
+                        <input type="time" id="schedule-time" class="schedule-input" value="07:00">
+                    </div>
+                    <div class="schedule-suggestion">
+                        <p>💡 แนะนำ: 07:00 น. — ช่วงเช้าคุณยายตื่นนอนแล้ว</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="send-btn schedule-confirm" id="schedule-confirm">
+                    ✅ ยืนยันตั้งเวลา
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast" role="alert" aria-live="polite">
+        <span class="toast-icon" id="toast-icon">❤️</span>
+        <span class="toast-text" id="toast-text">ส่งความรักสำเร็จ!</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
