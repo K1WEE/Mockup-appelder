@@ -1,18 +1,3 @@
-/* ============================================================
-   Aoon-Jai Family MVP — Interactive Mockup
-   ============================================================
-   Features:
-   - Splash screen animation
-   - Heart Pulse with spring animation
-   - Upload modal (photo/voice/video/text)
-   - Voice recorder simulation
-   - Content feed with mock data
-   - Simulated activity log
-   - Schedule modal
-   - Toast notifications
-   - Bottom nav tab switching
-   ============================================================ */
-
 (function () {
     'use strict';
 
@@ -22,43 +7,71 @@
 
     const splash = $('#splash-screen');
     const app = $('#app');
-    const heartPulseBtn = $('#heart-pulse-btn');
-    const pulseLabel = $('#pulse-label');
+
+    // Modals
+    const reminderModal = $('#reminder-modal');
     const uploadModal = $('#upload-modal');
-    const scheduleModal = $('#schedule-modal');
     const modalTitle = $('#modal-title');
     const modalClose = $('#modal-close');
+
+    // Upload Elements
     const uploadZone = $('#upload-zone');
-    const voiceRecorder = $('#voice-recorder');
-    const uploadDropZone = $('#upload-drop-zone');
     const fileInput = $('#file-input');
     const previewArea = $('#preview-area');
     const previewImg = $('#preview-img');
-    const previewVideo = $('#preview-video');
-    const previewAudio = $('#preview-audio');
     const captionInput = $('#caption-input');
     const charCount = $('#char-count');
     const sendBtn = $('#send-btn');
-    const scheduleBtn = $('#schedule-btn');
-    const scheduleConfirm = $('#schedule-confirm');
-    const recordBtn = $('#record-btn');
-    const recordDot = $('#record-dot');
-    const recordLabel = $('#record-label');
-    const recorderTimer = $('#recorder-timer');
-    const visualizerBars = $('.visualizer-bars');
-    const feedList = $('#feed-list');
-    const activityTimeline = $('#activity-timeline');
+
+    // Other elements
+    const scheduleTimeline = $('#schedule-timeline');
+    const heartPulseBtn = $('#heart-pulse-btn');
+    const pulseLabel = $('#pulse-label');
     const toast = $('#toast');
     const toastText = $('#toast-text');
     const toastIcon = $('#toast-icon');
-    const streakCount = $('#streak-count');
-
-    let currentUploadType = 'photo';
-    let isRecording = false;
-    let recordInterval = null;
-    let recordSeconds = 0;
 
     // ── MOCK DATA ──
+    const scheduleItems = [
+        {
+            timeStr: '08:00',
+            ampm: 'AM',
+            title: 'ทานยาเช้า',
+            subtitle: 'ยาความดัน / แอสไพริน',
+            icon: '💊',
+            bgClass: 'icon-pill',
+            status: 'done'
+        },
+        {
+            timeStr: '10:00',
+            ampm: 'AM',
+            title: 'เดินออกกำลังกาย',
+            subtitle: 'สวนสาธารณะหน้าหมู่บ้าน',
+            icon: '🚶',
+            bgClass: 'icon-walk',
+            status: 'in-progress',
+            statusText: 'กำลังทำ'
+        },
+        {
+            timeStr: '11:30',
+            ampm: 'AM',
+            title: 'กายภาพบำบัด',
+            subtitle: 'กับพยาบาลแอนนา (เหลือ 20 นาที)',
+            icon: '💆',
+            bgClass: 'icon-therapy',
+            status: 'pending'
+        },
+        {
+            timeStr: '13:00',
+            ampm: 'PM',
+            title: 'อาหารกลางวัน',
+            subtitle: 'ข้าวต้มปลา',
+            icon: '🍲',
+            bgClass: 'icon-lunch',
+            status: 'pending'
+        }
+    ];
+
     const feedItems = [
         {
             type: 'photo',
@@ -68,46 +81,11 @@
             emoji: '📷'
         },
         {
-            type: 'voice',
-            caption: 'ข้อความเสียง (15 วินาที)',
-            time: '2 ชั่วโมงที่แล้ว',
-            status: 'viewed',
-            emoji: '🎙'
-        },
-        {
-            type: 'video',
-            caption: 'หลานอรุณ กำลังเล่นที่โรงเรียน 🎒',
-            time: '5 ชั่วโมงที่แล้ว',
-            status: 'sent',
-            emoji: '🎬'
-        },
-        {
             type: 'pulse',
             caption: '❤️ ส่งความคิดถึง',
-            time: 'เมื่อวานนี้ 21:30',
+            time: '2 ชั่วโมงที่แล้ว',
             status: 'viewed',
             emoji: '💗'
-        },
-        {
-            type: 'photo',
-            caption: 'ทำข้าวผัดให้ยายชิมค่ะ 🍚',
-            time: 'เมื่อวานนี้ 18:00',
-            status: 'viewed',
-            emoji: '📷'
-        },
-        {
-            type: 'video',
-            caption: 'สวัสดีตอนเช้าค่ะยาย!',
-            time: '2 วันที่แล้ว 07:00',
-            status: 'viewed',
-            emoji: '🎬'
-        },
-        {
-            type: 'voice',
-            caption: 'ข้อความเสียง (8 วินาที)',
-            time: '2 วันที่แล้ว 20:15',
-            status: 'scheduled',
-            emoji: '🎙'
         }
     ];
 
@@ -116,44 +94,11 @@
             date: 'วันนี้',
             views: '3/5',
             events: [
-                { icon: '👁', text: 'ดูรูปถ่ายอากาศดี', time: '08:45' },
-                { icon: '😊', text: 'ยิ้มขณะฟังข้อความเสียง', time: '09:12' },
-                { icon: '👁', text: 'ดูวิดีโอหลานอรุณ 2 ครั้ง', time: '10:30' }
-            ]
-        },
-        {
-            date: 'เมื่อวานนี้',
-            views: '5/5',
-            events: [
-                { icon: '❤️', text: 'รับ Heart Pulse แล้วยิ้ม', time: '21:32' },
-                { icon: '👁', text: 'ดูรูปข้าวผัด', time: '18:05' },
-                { icon: '🔁', text: 'เปิดดูวิดีโอซ้ำ 3 รอบ', time: '19:00' },
-                { icon: '😴', text: 'เข้านอน', time: '21:45' }
-            ]
-        },
-        {
-            date: '2 วันที่แล้ว',
-            views: '4/4',
-            events: [
-                { icon: '☀️', text: 'ตื่นนอนและดูสวัสดีตอนเช้า', time: '06:50' },
-                { icon: '👁', text: 'ฟังข้อความเสียง', time: '08:00' },
-                { icon: '🚶', text: 'เดินผ่านหน้าจอ 4 ครั้ง', time: 'ทั้งวัน' }
+                { icon: '💊', text: 'ทานยาเช้า', time: '08:05' },
+                { icon: '🚶', text: 'เริ่มเดินออกกำลังกาย', time: '10:02' }
             ]
         }
     ];
-
-    const modalTitles = {
-        photo: 'ส่งรูปภาพ',
-        voice: 'บันทึกเสียง',
-        video: 'ส่งวิดีโอ',
-        text: 'ส่งข้อความ'
-    };
-
-    const statusLabels = {
-        viewed: '✅ ดูแล้ว',
-        sent: '📤 ส่งแล้ว',
-        scheduled: '⏰ ตั้งเวลา'
-    };
 
     // ── SPLASH SCREEN ──
     function initSplash() {
@@ -167,13 +112,46 @@
         }, 2200);
     }
 
-    // ── RENDER FEED ──
+    // ── RENDER ──
+    function renderSchedule() {
+        if (!scheduleTimeline) return;
+        scheduleTimeline.innerHTML = scheduleItems.map(item => {
+            let statusHtml = '';
+            if (item.status === 'done') {
+                statusHtml = `<div class="item-status"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
+            } else if (item.status === 'in-progress') {
+                statusHtml = `<div class="status-badge">${item.statusText}</div>`;
+            }
+
+            return `
+                <div class="timeline-item">
+                    <div class="time-col">
+                        <span class="time-val">${item.timeStr}</span>
+                        <span class="time-ampm">${item.ampm}</span>
+                    </div>
+                    <div class="content-col">
+                        <div class="item-card">
+                            <div class="item-icon ${item.bgClass}">${item.icon}</div>
+                            <div class="item-details">
+                                <div class="item-title">${item.title}</div>
+                                <div class="item-subtitle">${item.subtitle}</div>
+                            </div>
+                            ${statusHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
     function renderFeed() {
+        const feedList = $('#feed-list');
+        if (!feedList) return;
+        const statusLabels = { viewed: '✅ ดูแล้ว', sent: '📤 ส่งแล้ว', scheduled: '⏰ ตั้งเวลา' };
+
         feedList.innerHTML = feedItems.map((item, i) => `
             <div class="feed-item" style="animation-delay: ${i * 0.08}s">
-                <div class="feed-thumb ${item.type}">
-                    ${item.emoji}
-                </div>
+                <div class="feed-thumb ${item.type}">${item.emoji}</div>
                 <div class="feed-body">
                     <p class="feed-caption">${item.caption}</p>
                     <div class="feed-meta">
@@ -185,20 +163,20 @@
         `).join('');
     }
 
-    // ── RENDER ACTIVITY ──
     function renderActivity() {
+        const activityTimeline = $('#activity-timeline');
+        if (!activityTimeline) return;
         activityTimeline.innerHTML = activityData.map(day => `
             <div class="activity-day">
                 <div class="activity-day-header">
                     <span class="activity-date">${day.date}</span>
-                    <span class="activity-views">👁 ${day.views} ดูแล้ว</span>
                 </div>
                 <div class="activity-events">
                     ${day.events.map(ev => `
                         <div class="activity-event">
                             <span class="activity-event-icon">${ev.icon}</span>
                             <span>${ev.text}</span>
-                            <span class="activity-event-time">${ev.time}</span>
+                            <span class="activity-event-time" style="margin-left:auto;">${ev.time}</span>
                         </div>
                     `).join('')}
                 </div>
@@ -206,70 +184,34 @@
         `).join('');
     }
 
-    // ── HEART PULSE ──
-    function handleHeartPulse() {
-        heartPulseBtn.classList.add('pulsing');
-        pulseLabel.textContent = '💕 ส่งความคิดถึงแล้ว!';
-        pulseLabel.classList.add('sent');
+    let currentUploadType = 'message';
 
-        showToast('❤️', 'ส่งความคิดถึงถึงคุณยายแล้ว!');
-
-        // Add to feed
-        feedItems.unshift({
-            type: 'pulse',
-            caption: '❤️ ส่งความคิดถึง',
-            time: 'เมื่อสักครู่',
-            status: 'sent',
-            emoji: '💗'
-        });
-        renderFeed();
-
-        setTimeout(() => {
-            heartPulseBtn.classList.remove('pulsing');
-            pulseLabel.textContent = 'แตะเพื่อส่งความคิดถึง';
-            pulseLabel.classList.remove('sent');
-        }, 3000);
-    }
-
-    // ── UPLOAD MODAL ──
-    function openUploadModal(type) {
+    // ── ACTIONS & MODALS ──
+    window.openActionModal = function (type) {
         currentUploadType = type;
-        modalTitle.textContent = modalTitles[type];
+        if (!uploadModal) return;
+
+        modalTitle.textContent = type === 'photo' ? 'ส่งรูปภาพ' : 'ส่งข้อความ';
 
         // Reset state
         previewArea.classList.add('hidden');
         previewImg.classList.add('hidden');
-        previewVideo.classList.add('hidden');
-        previewAudio.classList.add('hidden');
         captionInput.value = '';
         charCount.textContent = '0';
 
-        if (type === 'voice') {
+        if (type === 'message') {
             uploadZone.classList.add('hidden');
-            voiceRecorder.classList.remove('hidden');
-            resetRecorder();
         } else {
             uploadZone.classList.remove('hidden');
-            voiceRecorder.classList.add('hidden');
-            if (type === 'text') {
-                uploadZone.classList.add('hidden');
-            }
-            fileInput.accept = type === 'photo' ? 'image/*' : 'video/*';
+            fileInput.accept = 'image/*';
         }
 
         uploadModal.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
+    };
 
-    function closeUploadModal() {
-        uploadModal.classList.remove('open');
-        document.body.style.overflow = '';
-        stopRecording();
-    }
-
-    function closeScheduleModal() {
-        scheduleModal.classList.remove('open');
-    }
+    window.closeUploadModal = function () {
+        if (uploadModal) uploadModal.classList.remove('open');
+    };
 
     // ── FILE UPLOAD ──
     function handleFileSelect(e) {
@@ -286,154 +228,105 @@
         if (file.type.startsWith('image/')) {
             previewImg.src = url;
             previewImg.classList.remove('hidden');
-        } else if (file.type.startsWith('video/')) {
-            previewVideo.src = url;
-            previewVideo.classList.remove('hidden');
         }
-    }
-
-    // ── VOICE RECORDER ──
-    function toggleRecording() {
-        if (isRecording) {
-            stopRecording();
-        } else {
-            startRecording();
-        }
-    }
-
-    function startRecording() {
-        isRecording = true;
-        recordSeconds = 0;
-        recordBtn.classList.add('recording');
-        recordLabel.textContent = 'แตะเพื่อหยุด';
-        visualizerBars.classList.add('active');
-
-        recordInterval = setInterval(() => {
-            recordSeconds++;
-            const mins = Math.floor(recordSeconds / 60);
-            const secs = recordSeconds % 60;
-            recorderTimer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-
-            if (recordSeconds >= 60) {
-                stopRecording();
-            }
-        }, 1000);
-    }
-
-    function stopRecording() {
-        isRecording = false;
-        clearInterval(recordInterval);
-        recordBtn.classList.remove('recording');
-        recordLabel.textContent = 'แตะเพื่อบันทึก';
-        visualizerBars.classList.remove('active');
-    }
-
-    function resetRecorder() {
-        stopRecording();
-        recordSeconds = 0;
-        recorderTimer.textContent = '0:00';
     }
 
     // ── SEND CONTENT ──
     function sendContent() {
-        const caption = captionInput.value.trim() || getDefaultCaption();
+        const caption = captionInput.value.trim() || (currentUploadType === 'photo' ? 'ส่งรูปภาพ 📷' : 'ส่งข้อความ 💬');
+
+        // Check if we are in chat mode
+        if (document.body.classList.contains('chat-active')) {
+            if (currentUploadType === 'photo' && previewImg && !previewImg.classList.contains('hidden')) {
+                window.sendChatMessage('photo', previewImg.src);
+            } else {
+                // Fallback
+                if (chatInputText) chatInputText.value = caption;
+                window.sendChatMessage();
+            }
+        } else {
+            // Fallback to original feed logic
+            feedItems.unshift({
+                type: currentUploadType,
+                caption,
+                time: 'เมื่อสักครู่',
+                status: 'sent',
+                emoji: currentUploadType === 'photo' ? '📷' : '💬'
+            });
+
+            renderFeed();
+            showToast('✅', 'ส่งข้อความสำเร็จ!');
+        }
+
+        window.closeUploadModal();
+    }
+
+    // ── CAPTION INPUT ──
+    function handleCaptionInput() {
+        charCount.textContent = captionInput.value.length;
+    }
+
+    window.openReminderModal = function () {
+        if (reminderModal) {
+            reminderModal.classList.add('open');
+        }
+    };
+
+    window.closeReminderModal = function () {
+        if (reminderModal) {
+            reminderModal.classList.remove('open');
+        }
+    };
+
+    window.saveReminder = function () {
+        const title = $('#remind-title').value.trim() || 'แจ้งเตือนใหม่';
+        const time = $('#remind-time').value || '12:00';
+
+        // Add to schedule at top
+        scheduleItems.unshift({
+            timeStr: time,
+            ampm: parseInt(time.split(':')[0]) >= 12 ? 'PM' : 'AM',
+            title: title,
+            subtitle: 'ตั้งค่าโดยคุณ',
+            icon: '⏰',
+            bgClass: 'icon-pill',
+            status: 'pending'
+        });
+
+        renderSchedule();
+        closeReminderModal();
+        showToast('✅', 'บันทึกแจ้งเตือนแล้ว!');
+    };
+
+    function handleHeartPulse() {
+        if (!heartPulseBtn) return;
+        heartPulseBtn.classList.add('pulsing');
+        pulseLabel.textContent = '💕 ส่งความห่วงใยแล้ว!';
+        pulseLabel.classList.add('sent');
+
+        showToast('❤️', 'ส่งความห่วงใยแล้ว!');
 
         feedItems.unshift({
-            type: currentUploadType,
-            caption,
+            type: 'pulse',
+            caption: '❤️ ส่งความคิดถึง',
             time: 'เมื่อสักครู่',
             status: 'sent',
-            emoji: getTypeEmoji(currentUploadType)
+            emoji: '💗'
         });
-
         renderFeed();
-        closeUploadModal();
-        showToast('✅', 'ส่งความรักสำเร็จ!');
 
-        // Update streak
-        const current = parseInt(streakCount.textContent);
-        streakCount.textContent = current + 1;
+        setTimeout(() => {
+            heartPulseBtn.classList.remove('pulsing');
+            pulseLabel.textContent = 'แตะเพื่อส่งความห่วงใยด่วน';
+            pulseLabel.classList.remove('sent');
+        }, 3000);
     }
 
-    function scheduleContent() {
-        closeUploadModal();
-
-        // Set default date to tomorrow
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const dateInput = $('#schedule-date');
-        dateInput.value = tomorrow.toISOString().split('T')[0];
-
-        scheduleModal.classList.add('open');
-    }
-
-    function confirmSchedule() {
-        const caption = captionInput?.value?.trim() || 'เนื้อหาตั้งเวลาส่ง';
-
-        feedItems.unshift({
-            type: currentUploadType,
-            caption: `⏰ ${caption}`,
-            time: 'ตั้งเวลาส่ง 07:00 พรุ่งนี้',
-            status: 'scheduled',
-            emoji: getTypeEmoji(currentUploadType)
-        });
-
-        renderFeed();
-        closeScheduleModal();
-        showToast('⏰', 'ตั้งเวลาส่งสำเร็จ!');
-    }
-
-    function getDefaultCaption() {
-        const captions = {
-            photo: 'ส่งรูปภาพ 📷',
-            voice: `ข้อความเสียง (${recordSeconds} วินาที)`,
-            video: 'ส่งวิดีโอ 🎬',
-            text: captionInput.value || 'ส่งข้อความ 💬'
-        };
-        return captions[currentUploadType];
-    }
-
-    function getTypeEmoji(type) {
-        return { photo: '📷', voice: '🎙', video: '🎬', text: '💬', pulse: '💗' }[type] || '📎';
-    }
-
-    // ── QUICK MESSAGES ──
-    function handleQuickMsg(e) {
-        const msg = e.target.dataset.msg;
-        if (msg) {
-            captionInput.value = msg;
-            charCount.textContent = msg.length;
-        }
-    }
-
-    // ── TOAST ──
     function showToast(icon, text) {
         toastIcon.textContent = icon;
         toastText.textContent = text;
         toast.classList.add('show');
-
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 2800);
-    }
-
-    // ── DRAG & DROP ──
-    function setupDragDrop() {
-        uploadDropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadDropZone.classList.add('dragover');
-        });
-
-        uploadDropZone.addEventListener('dragleave', () => {
-            uploadDropZone.classList.remove('dragover');
-        });
-
-        uploadDropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadDropZone.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file) showPreview(file);
-        });
+        setTimeout(() => { toast.classList.remove('show'); }, 2800);
     }
 
     // ── BOTTOM NAV ──
@@ -446,111 +339,127 @@
 
         const tab = btn.dataset.tab;
 
-        // Show/hide sections based on tab
-        const sections = {
-            home: ['parent-section', 'pulse-section', 'actions-section', 'feed-section'],
-            schedule: ['feed-section'],
-            activity: ['parent-section', 'activity-section'],
-            settings: []
-        };
+        // Hide all tabs
+        $$('.tab-content').forEach(t => t.classList.add('hidden'));
 
-        const allSections = ['parent-section', 'pulse-section', 'actions-section', 'feed-section', 'activity-section'];
+        // Show selected tab
+        const activeTab = $('#tab-' + tab);
+        if (activeTab) {
+            activeTab.classList.remove('hidden');
+        } else {
+            // Unimplemented tabs
+            showToast('🚧', 'หน้านี้อยู่ระหว่างพัฒนา');
+            $('#tab-home').classList.remove('hidden');
+            $$('.bnav-item').forEach(b => b.classList.remove('active'));
+            $$('.bnav-item[data-tab="home"]')[0].classList.add('active');
+        }
 
-        allSections.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                if (sections[tab]?.includes(id)) {
-                    el.classList.remove('hidden');
-                } else {
-                    el.classList.add('hidden');
-                }
-            }
-        });
-
-        if (tab === 'settings') {
-            showToast('⚙️', 'ตั้งค่า (อยู่ระหว่างพัฒนา)');
+        // Add class to body if chat is active so we can pad the bottom nav
+        if (tab === 'chat') {
+            document.body.classList.add('chat-active');
+            scrollToBottom();
+        } else {
+            document.body.classList.remove('chat-active');
         }
     }
 
-    // ── CAPTION INPUT ──
-    function handleCaptionInput() {
-        charCount.textContent = captionInput.value.length;
-    }
+    // ── CHAT LOGIC ──
+    const chatInputText = $('#chat-input-text');
+    const chatMessages = $('#chat-messages');
 
-    // ── EVENT LISTENERS ──
-    function bindEvents() {
-        // Heart Pulse
-        heartPulseBtn.addEventListener('click', handleHeartPulse);
+    window.sendChatMessage = function (mediaType, mediaUrl) {
+        let text = chatInputText ? chatInputText.value.trim() : '';
 
-        // Action buttons
-        $$('.action-card').forEach(btn => {
-            btn.addEventListener('click', () => {
-                openUploadModal(btn.dataset.type);
-            });
-        });
+        // Handle media uploads from the modal
+        if (mediaType === 'photo') {
+            text = 'ส่งรูปภาพ 📷';
+        }
 
-        // Modal
-        modalClose.addEventListener('click', closeUploadModal);
-        uploadModal.addEventListener('click', (e) => {
-            if (e.target === uploadModal) closeUploadModal();
-        });
+        if (!text) return;
 
-        // Schedule modal close
-        $$('.schedule-close').forEach(btn => {
-            btn.addEventListener('click', closeScheduleModal);
-        });
-        scheduleModal.addEventListener('click', (e) => {
-            if (e.target === scheduleModal) closeScheduleModal();
-        });
+        // Append sent message
+        const timeStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-        // File upload
-        uploadDropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', handleFileSelect);
-        setupDragDrop();
+        let mediaHtml = '';
+        if (mediaType === 'photo' && mediaUrl) {
+            mediaHtml = `<img src="${mediaUrl}" style="max-width: 100%; border-radius: 8px; margin-top: 8px;">`;
+        }
 
-        // Voice recorder
-        recordBtn.addEventListener('click', toggleRecording);
+        const msgHtml = `
+            <div class="message-bubble sent">
+                <div class="bubble-text">${text}${mediaHtml}</div>
+                <div class="bubble-time">${timeStr}</div>
+            </div>
+        `;
 
-        // Send / Schedule
-        sendBtn.addEventListener('click', sendContent);
-        scheduleBtn.addEventListener('click', scheduleContent);
-        scheduleConfirm.addEventListener('click', confirmSchedule);
+        if (chatMessages) {
+            chatMessages.insertAdjacentHTML('beforeend', msgHtml);
+            scrollToBottom();
+        }
 
-        // Quick messages
-        $$('.quick-msg').forEach(btn => {
-            btn.addEventListener('click', handleQuickMsg);
-        });
+        if (chatInputText) chatInputText.value = '';
 
-        // Caption
-        captionInput.addEventListener('input', handleCaptionInput);
-
-        // Bottom nav
-        $('#bottom-nav').addEventListener('click', handleNavTab);
-
-        // Keyboard: Escape closes modals
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeUploadModal();
-                closeScheduleModal();
+        // Simulate reply
+        setTimeout(() => {
+            const replyHtml = `
+                <div class="message-bubble received">
+                    <div class="bubble-text">ขอบใจจ้าลูกยายเห็นแล้วนะ ❤️</div>
+                    <div class="bubble-time">${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
+                </div>
+            `;
+            if (chatMessages) {
+                chatMessages.insertAdjacentHTML('beforeend', replyHtml);
+                scrollToBottom();
             }
-        });
+        }, 2000);
+    };
+
+    function scrollToBottom() {
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
     }
 
     // ── INIT ──
+    function bindEvents() {
+        // Nav
+        const bNav = $('#bottom-nav');
+        if (bNav) bNav.addEventListener('click', handleNavTab);
+
+        // Modals
+        $$('.reminder-close').forEach(btn => btn.addEventListener('click', closeReminderModal));
+        if (reminderModal) {
+            reminderModal.addEventListener('click', e => {
+                if (e.target === reminderModal) closeReminderModal();
+            });
+        }
+
+        if (modalClose) modalClose.addEventListener('click', window.closeUploadModal);
+        if (uploadModal) {
+            uploadModal.addEventListener('click', (e) => {
+                if (e.target === uploadModal) window.closeUploadModal();
+            });
+        }
+
+        // File Upload
+        const uploadDropZone = $('#upload-drop-zone');
+        if (uploadDropZone) uploadDropZone.addEventListener('click', () => fileInput.click());
+        if (fileInput) fileInput.addEventListener('change', handleFileSelect);
+        if (sendBtn) sendBtn.addEventListener('click', sendContent);
+        if (captionInput) captionInput.addEventListener('input', handleCaptionInput);
+
+        // Heart Pulse
+        if (heartPulseBtn) heartPulseBtn.addEventListener('click', handleHeartPulse);
+    }
+
     function init() {
         initSplash();
+        renderSchedule();
         renderFeed();
         renderActivity();
         bindEvents();
-
-        // Set today's date as min for schedule
-        const dateInput = $('#schedule-date');
-        if (dateInput) {
-            dateInput.min = new Date().toISOString().split('T')[0];
-        }
     }
 
-    // Start
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {

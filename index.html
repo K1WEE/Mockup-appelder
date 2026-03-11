@@ -2,341 +2,2627 @@
 <html lang="th">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aoon-Jai — ส่งความรักถึงบ้าน</title>
-    <meta name="description"
-        content="Aoon-Jai connects Thai families with elderly parents through emotional content — videos, voice messages, and photos delivered automatically.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>อุ่นใจ — Family App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FFF8F0;
+      --warm: #FFFDF9;
+      --amber: #FFC857;
+      --amber-l: #FFE6A8;
+      --amber-d: #E6B04E;
+      --terra: #FF6B6B;
+      --sage: #4ECDC4;
+      --sage-l: #E0F5F3;
+      --brown: #FF6B6B;
+      --brown-2: #E85555;
+      --brown-l: #FF8A8A;
+      --text: #2E261E;
+      --text-2: #6B5E50;
+      --text-3: #A89A8A;
+      --border: #E0D8CE;
+      --card: #FFFDF9;
+      --shadow-sm: 0 2px 8px rgba(110, 80, 50, 0.08);
+      --shadow: 0 4px 20px rgba(110, 80, 50, 0.12);
+      --shadow-lg: 0 8px 40px rgba(110, 80, 50, 0.18);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      background: #FFF0E0;
+      overflow: hidden;
+    }
+
+    
+    /* ── SPLASH SCREEN ── */
+    .splash {
+      position: absolute;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(145deg, var(--terra) 0%, var(--amber) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .splash.fade-out {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+
+    .splash-content {
+      text-align: center;
+      animation: splashEntry 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .splash-heart {
+      margin-bottom: 24px;
+      animation: heartBeat 1.2s ease-in-out infinite;
+    }
+
+    .splash-title {
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
+
+    .splash-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 400;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+    }
+
+    @keyframes splashEntry {
+      from { opacity: 0; transform: translateY(30px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.15); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.1); }
+    }
+
+    /* ── PHONE SHELL (desktop preview) ── */
+    .shell {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 30% 20%, #FF8A8A22, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, #4ECDC422, transparent 60%),
+        #F0EBE4;
+    }
+
+    .phone {
+      width: min(420px, 100%);
+      height: min(860px, 100%);
+      background: var(--cream);
+      border-radius: clamp(0px, 4vw, 44px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 32px 80px rgba(44, 24, 16, .35), 0 0 0 1px rgba(255, 255, 255, .3);
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      background: var(--brown);
+      padding: calc(var(--safe-top) + 10px) 20px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .status-time {
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .status-icons span {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .8);
+    }
+
+    /* ── APP HEADER ── */
+    .app-header {
+      background: var(--brown);
+      padding: 0 20px 16px;
+      flex-shrink: 0;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-back {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .12);
+      border: none;
+      color: white;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background .2s;
+    }
+
+    .header-back:hover {
+      background: rgba(255, 255, 255, .2);
+    }
+
+    .header-title {
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      flex: 1;
+    }
+
+    .header-subtitle {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .5);
+      margin-top: 1px;
+    }
+
+    .header-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--amber), var(--terra));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, .25);
+    }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 8px 0 calc(var(--safe-bottom) + 8px);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 4px 0;
+      transition: all .2s;
+      border: none;
+      background: transparent;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+    }
+
+    .nav-tab .ni {
+      font-size: 21px;
+    }
+
+    .nav-tab .nl {
+      font-size: 10px;
+      color: var(--text-3);
+      font-weight: 500;
+    }
+
+    .nav-tab.active .nl {
+      color: var(--amber-d);
+      font-weight: 700;
+    }
+
+    .nav-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 16px;
+      height: 16px;
+      background: var(--terra);
+      border-radius: 50%;
+      border: 2px solid var(--card);
+      font-size: 9px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icon-wrap {
+      position: relative;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      flex: 1;
+      overflow: hidden;
+      flex-direction: column;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* ── SCROLL AREA ── */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .scroll-area::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ══════════════════════════
+   HOME SCREEN
+══════════════════════════ */
+    .home-header-bg {
+      background: var(--brown);
+      padding: 16px 20px 28px;
+      flex-shrink: 0;
+    }
+
+    .elder-card {
+      background: rgba(255, 255, 255, .1);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(255, 255, 255, .15);
+    }
+
+    .elder-ava {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--sage-l));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, .3);
+    }
+
+    .elder-detail .en {
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .elder-detail .es {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .55);
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .online-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #5AC77A;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    .home-body {
+      padding: 20px 16px 16px;
+    }
+
+    /* Stat pills */
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .stat-pill:active {
+      transform: scale(.97);
+    }
+
+    .stat-pill-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .sp-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .sp-icon.or {
+      background: rgba(232, 160, 74, .15);
+    }
+
+    .sp-icon.gr {
+      background: rgba(122, 158, 126, .15);
+    }
+
+    .sp-icon.re {
+      background: rgba(201, 97, 74, .15);
+    }
+
+    .sp-icon.bl {
+      background: rgba(100, 149, 200, .15);
+    }
+
+    .sp-badge {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .badge-ok {
+      background: rgba(90, 199, 122, .12);
+      color: #2E7D4F;
+    }
+
+    .badge-warn {
+      background: rgba(232, 160, 74, .12);
+      color: var(--amber-d);
+    }
+
+    .badge-alert {
+      background: rgba(201, 97, 74, .12);
+      color: var(--terra);
+    }
+
+    .sp-num {
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .sp-label {
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    /* Alert banner */
+    .alert-banner {
+      background: rgba(201, 97, 74, .08);
+      border: 1px solid rgba(201, 97, 74, .25);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .alert-banner:active {
+      background: rgba(201, 97, 74, .14);
+    }
+
+    .ab-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .ab-text .at {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--terra);
+    }
+
+    .ab-text .as {
+      font-size: 11px;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
+    .ab-arr {
+      margin-left: auto;
+      color: var(--terra);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Section heading */
+    .sec-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      margin-top: 4px;
+    }
+
+    .sec-title {
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sec-more {
+      font-size: 12px;
+      color: var(--amber-d);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Timeline mini */
+    .tl {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .tl-row {
+      display: flex;
+      gap: 12px;
+      padding: 8px 0;
+      position: relative;
+    }
+
+    .tl-row:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 31px;
+      top: 34px;
+      bottom: -4px;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .tl-t {
+      font-size: 10px;
+      color: var(--text-3);
+      width: 36px;
+      text-align: right;
+      padding-top: 8px;
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    .tl-d {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .tl-d.done {
+      background: var(--sage);
+      color: white;
+    }
+
+    .tl-d.miss {
+      background: var(--terra);
+      color: white;
+    }
+
+    .tl-d.pend {
+      background: var(--amber-l);
+      color: white;
+    }
+
+    .tl-d.up {
+      background: var(--border);
+      color: var(--text-3);
+    }
+
+    .tl-c {
+      flex: 1;
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 8px 12px;
+    }
+
+    .tl-c.done {
+      border-left: 3px solid var(--sage);
+    }
+
+    .tl-c.miss {
+      border-left: 3px solid var(--terra);
+    }
+
+    .tl-c.pend {
+      border-left: 3px solid var(--amber);
+    }
+
+    .tl-c.up {
+      border-left: 3px solid var(--border);
+    }
+
+    .tl-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tl-sub {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+
+    .tl-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+
+    .t-done {
+      background: rgba(122, 158, 126, .14);
+      color: var(--sage);
+    }
+
+    .t-miss {
+      background: rgba(201, 97, 74, .1);
+      color: var(--terra);
+    }
+
+    .t-pend {
+      background: rgba(232, 160, 74, .12);
+      color: var(--amber-d);
+    }
+
+    .t-up {
+      background: rgba(150, 150, 150, .1);
+      color: var(--text-3);
+    }
+
+    /* ══════════════════════════
+   CHAT SCREEN
+══════════════════════════ */
+    .chat-header {
+      background: var(--brown);
+      padding: 0 16px 14px;
+      flex-shrink: 0;
+    }
+
+    .chat-header-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-ava {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--sage-l));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, .25);
+    }
+
+    .chat-hinfo {
+      flex: 1;
+    }
+
+    .chat-hname {
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .chat-hstatus {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .55);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .chat-hmenu {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .12);
+      border: none;
+      color: white;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Chat messages area */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 16px 14px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: linear-gradient(180deg, #f7eee3 0%, var(--cream) 100%);
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Date divider */
+    .date-div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .date-div::before,
+    .date-div::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .date-div span {
+      font-size: 11px;
+      color: var(--text-3);
+      font-weight: 600;
+      background: rgba(232, 160, 74, .12);
+      padding: 3px 10px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+
+    /* Bubble base */
+    .bubble-wrap {
+      display: flex;
+      flex-direction: column;
+      max-width: 78%;
+      animation: fadeUp .25s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bubble-wrap.them {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+
+    .bubble-wrap.me {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .bubble-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .bubble-wrap.them .bubble-row {
+      flex-direction: row;
+    }
+
+    .bubble-wrap.me .bubble-row {
+      flex-direction: row-reverse;
+    }
+
+    .b-ava {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-bottom: 2px;
+    }
+
+    .b-ava.elder {
+      background: linear-gradient(135deg, var(--sage), var(--sage-l));
+    }
+
+    .b-ava.me {
+      background: linear-gradient(135deg, var(--amber), var(--amber-d));
+    }
+
+    /* Text bubble */
+    .bubble {
+      padding: 10px 14px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text);
+      position: relative;
+      word-break: break-word;
+    }
+
+    .bubble-wrap.them .bubble {
+      background: var(--card);
+      border-radius: 4px 18px 18px 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .bubble-wrap.me .bubble {
+      background: var(--brown);
+      color: white;
+      border-radius: 18px 4px 18px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Image bubble */
+    .img-bubble {
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 200px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .img-bubble img {
+      width: 100%;
+      display: block;
+    }
+
+    .bubble-wrap.them .img-bubble {
+      border-radius: 4px 16px 16px 16px;
+    }
+
+    .bubble-wrap.me .img-bubble {
+      border-radius: 16px 4px 16px 16px;
+    }
+
+    /* Voice bubble */
+    .voice-bubble {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px 18px 18px 18px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 180px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .voice-bubble:active {
+      background: rgba(232, 160, 74, .08);
+    }
+
+    .vb-play {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--amber);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+
+    .vb-play:active {
+      transform: scale(.92);
+      background: var(--amber-d);
+    }
+
+    .vb-wave {
+      flex: 1;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow: hidden;
+    }
+
+    .vb-bar {
+      width: 3px;
+      border-radius: 2px;
+      background: var(--amber-l);
+      flex-shrink: 0;
+    }
+
+    .vb-dur {
+      font-size: 11px;
+      color: var(--text-3);
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    /* Bubble time & status */
+    .bubble-meta {
+      font-size: 10px;
+      color: var(--text-3);
+      margin-top: 3px;
+      padding: 0 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bubble-wrap.me .bubble-meta {
+      justify-content: flex-end;
+    }
+
+    .read-tick {
+      font-size: 12px;
+      color: var(--sage);
+    }
+
+    .sender-name {
+      font-size: 11px;
+      color: var(--amber-d);
+      font-weight: 700;
+      margin-bottom: 3px;
+      padding-left: 4px;
+    }
+
+    /* System message */
+    .sys-msg {
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-3);
+      background: rgba(200, 180, 160, .2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin: 4px 0;
+    }
+
+    /* ── CHAT INPUT BAR ── */
+    .chat-input-bar {
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 10px 12px calc(var(--safe-bottom) + 10px);
+      flex-shrink: 0;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .input-attach {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+
+    .input-attach:active {
+      background: var(--border);
+    }
+
+    .input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .chat-input {
+      width: 100%;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 22px;
+      padding: 9px 16px;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      line-height: 1.4;
+      max-height: 100px;
+      transition: border .2s;
+      display: block;
+    }
+
+    .chat-input:focus {
+      border-color: var(--amber);
+    }
+
+    .chat-input::placeholder {
+      color: var(--text-3);
+    }
+
+    .send-icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--amber);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all .2s;
+      box-shadow: 0 2px 8px rgba(232, 160, 74, .4);
+    }
+
+    .send-icon-btn:active {
+      transform: scale(.92);
+      background: var(--amber-d);
+    }
+
+    /* Attachment panel */
+    .attach-panel {
+      display: none;
+      padding: 12px 0 4px;
+    }
+
+    .attach-panel.open {
+      display: block;
+    }
+
+    .attach-opts {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+
+    .attach-opts::-webkit-scrollbar {
+      display: none;
+    }
+
+    .attach-opt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .ao-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      border: 1.5px solid var(--border);
+      transition: all .2s;
+    }
+
+    .ao-icon:active {
+      transform: scale(.93);
+    }
+
+    .ao-icon.photo {
+      background: rgba(232, 160, 74, .12);
+    }
+
+    .ao-icon.video {
+      background: rgba(122, 158, 126, .12);
+    }
+
+    .ao-icon.voice {
+      background: rgba(201, 97, 74, .12);
+    }
+
+    .ao-icon.remind {
+      background: rgba(100, 149, 200, .12);
+    }
+
+    .ao-label {
+      font-size: 10px;
+      color: var(--text-3);
+      font-weight: 600;
+    }
+
+    /* Voice recording overlay */
+    .voice-rec-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(74, 46, 30, .85);
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      border-radius: inherit;
+    }
+
+    .voice-rec-overlay.show {
+      display: flex;
+    }
+
+    .vro-wave {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 40px;
+    }
+
+    .vro-bar {
+      width: 4px;
+      border-radius: 3px;
+      background: var(--amber-l);
+      animation: waveAnim 0.6s ease-in-out infinite;
+    }
+
+    .vro-bar:nth-child(1) {
+      height: 12px;
+      animation-delay: 0s;
+    }
+
+    .vro-bar:nth-child(2) {
+      height: 24px;
+      animation-delay: .1s;
+    }
+
+    .vro-bar:nth-child(3) {
+      height: 36px;
+      animation-delay: .2s;
+    }
+
+    .vro-bar:nth-child(4) {
+      height: 28px;
+      animation-delay: .15s;
+    }
+
+    .vro-bar:nth-child(5) {
+      height: 20px;
+      animation-delay: .05s;
+    }
+
+    .vro-bar:nth-child(6) {
+      height: 32px;
+      animation-delay: .25s;
+    }
+
+    .vro-bar:nth-child(7) {
+      height: 18px;
+      animation-delay: .1s;
+    }
+
+    @keyframes waveAnim {
+
+      0%,
+      100% {
+        transform: scaleY(1);
+      }
+
+      50% {
+        transform: scaleY(1.6);
+      }
+    }
+
+    .vro-text {
+      font-size: 14px;
+      color: white;
+      font-weight: 600;
+    }
+
+    .vro-timer {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber-l);
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+    }
+
+    .vro-cancel {
+      background: rgba(255, 255, 255, .15);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 20px;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ══════════════════════════
+   REMINDERS SCREEN
+══════════════════════════ */
+    .remind-body {
+      padding: 16px 14px 20px;
+    }
+
+    .remind-section {
+      margin-bottom: 20px;
+    }
+
+    .remind-sec-title {
+      font-size: 11px;
+      color: var(--text-3);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .remind-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .remind-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: all .2s;
+    }
+
+    .ri-ic {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .ri-med2 {
+      background: rgba(201, 97, 74, .1);
+    }
+
+    .ri-wat {
+      background: rgba(100, 149, 200, .1);
+    }
+
+    .ri-exe {
+      background: rgba(122, 158, 126, .1);
+    }
+
+    .ri-apt {
+      background: rgba(232, 160, 74, .1);
+    }
+
+    .ri-info {
+      flex: 1;
+    }
+
+    .ri-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .ri-time {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 2px;
+    }
+
+    .toggle {
+      width: 44px;
+      height: 25px;
+      border-radius: 13px;
+      background: var(--sage);
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background .25s;
+    }
+
+    .toggle.off {
+      background: var(--border);
+    }
+
+    .toggle-k {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      background: white;
+      transition: transform .25s;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+    }
+
+    .toggle.off .toggle-k {
+      transform: none;
+    }
+
+    .toggle:not(.off) .toggle-k {
+      transform: translateX(19px);
+    }
+
+    .add-remind-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--amber), var(--amber-d));
+      border: none;
+      border-radius: 16px;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 3px 12px rgba(232, 160, 74, .4);
+      transition: all .2s;
+      margin-top: 8px;
+    }
+
+    .add-remind-btn:active {
+      transform: scale(.98);
+    }
+
+    /* ══════════════════════════
+   STATS SCREEN
+══════════════════════════ */
+    .stats-body {
+      padding: 16px 14px 20px;
+    }
+
+    .stat-big-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 14px;
+    }
+
+    .sbc-title {
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .prog-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .prog-item {}
+
+    .prog-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .prog-label {
+      color: var(--text-2);
+    }
+
+    .prog-val {
+      font-weight: 700;
+    }
+
+    .prog-val.g {
+      color: var(--sage);
+    }
+
+    .prog-val.o {
+      color: var(--amber-d);
+    }
+
+    .prog-val.r {
+      color: var(--terra);
+    }
+
+    .prog-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .8s ease;
+    }
+
+    .pf-g {
+      background: var(--sage);
+    }
+
+    .pf-o {
+      background: var(--amber);
+    }
+
+    .pf-r {
+      background: var(--terra);
+    }
+
+    /* Mini bar chart */
+    .bar-chart {
+      display: flex;
+      gap: 6px;
+      align-items: flex-end;
+      height: 70px;
+      padding-top: 10px;
+    }
+
+    .bc-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bc-bar {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: height .5s;
+    }
+
+    .bc-label {
+      font-size: 9px;
+      color: var(--text-3);
+    }
+
+    /* ══════════════════════════
+   ADD REMINDER MODAL
+══════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(44, 24, 16, .5);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: var(--warm);
+      border-radius: 24px 24px 0 0;
+      padding: 20px 20px calc(var(--safe-bottom) + 24px);
+      width: 100%;
+      animation: slideUp .3s ease;
+      max-height: 85%;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 18px;
+      cursor: pointer;
+    }
+
+    .sheet-title {
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-g {
+      margin-bottom: 14px;
+    }
+
+    .form-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 7px;
+      display: block;
+    }
+
+    .form-inp {
+      width: 100%;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border .2s;
+    }
+
+    .form-inp:focus {
+      border-color: var(--amber);
+    }
+
+    .icon-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .icon-chip {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .icon-chip.sel {
+      border-color: var(--amber);
+      background: rgba(232, 160, 74, .12);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn-cancel2 {
+      flex: 1;
+      padding: 13px;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-2);
+      cursor: pointer;
+    }
+
+    .btn-save2 {
+      flex: 2;
+      padding: 13px;
+      background: var(--amber);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(232, 160, 74, .35);
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--brown);
+      color: white;
+      padding: 11px 20px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      white-space: nowrap;
+      opacity: 0;
+      transition: all .3s;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── MISC ── */
+    .mt8 {
+      margin-top: 8px;
+    }
+  </style>
 </head>
 
 <body>
-    <!-- ===== SPLASH SCREEN ===== -->
-    <div id="splash-screen" class="splash">
-        <div class="splash-content">
-            <div class="splash-heart" id="splash-heart">
-                <svg viewBox="0 0 100 100" width="80" height="80">
-                    <path
-                        d="M50 88 C25 65, 0 45, 0 28 C0 12, 12 0, 28 0 C38 0, 46 6, 50 14 C54 6, 62 0, 72 0 C88 0, 100 12, 100 28 C100 45, 75 65, 50 88Z"
-                        fill="url(#heartGrad)" />
-                    <defs>
-                        <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#FF6B6B" />
-                            <stop offset="100%" stop-color="#FFC857" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
-            <h1 class="splash-title">Aoon-Jai</h1>
-            <p class="splash-subtitle">ส่งความรักถึงบ้าน</p>
+  <div class="shell">
+    <div class="phone" id="app">
+
+      <!-- ===== SPLASH SCREEN ===== -->
+      <div id="splash-screen" class="splash">
+          <div class="splash-content">
+              <div class="splash-heart" id="splash-heart">
+                  <svg viewBox="0 0 100 100" width="80" height="80">
+                      <path
+                          d="M50 88 C25 65, 0 45, 0 28 C0 12, 12 0, 28 0 C38 0, 46 6, 50 14 C54 6, 62 0, 72 0 C88 0, 100 12, 100 28 C100 45, 75 65, 50 88Z"
+                          fill="url(#heartGrad)" />
+                      <defs>
+                          <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+                              <stop offset="0%" stop-color="#FF6B6B" />
+                              <stop offset="100%" stop-color="#FFC857" />
+                          </linearGradient>
+                      </defs>
+                  </svg>
+              </div>
+              <h1 class="splash-title">อุ่นใจ</h1>
+              <p class="splash-subtitle">Smart Reminder สำหรับครอบครัว</p>
+          </div>
+      </div>
+
+
+      <!-- STATUS BAR -->
+      <div class="status-bar">
+        <div class="status-time">9:41</div>
+        <div class="status-icons">
+          <span>📶</span><span>🔋</span>
         </div>
-    </div>
+      </div>
 
-    <!-- ===== MAIN APP ===== -->
-    <div id="app" class="app hidden">
+      <!-- ════════════════════
+       HOME SCREEN
+  ════════════════════ -->
+      <div class="screen active" id="screen-home">
+        <div class="home-header-bg">
+          <div
+            style="font-family:'Outfit', 'Noto Sans Thai', sans-serif; font-size:22px; font-weight:700; color:white; margin-bottom:4px;">
+            สวัสดีตอนเช้า 🌤️
+          </div>
+          <div style="font-size:12px; color:rgba(255,255,255,.5); margin-bottom:14px;">
+            พุธที่ 11 มีนาคม 2569
+          </div>
+          <div class="elder-card">
+            <div class="elder-ava">👵</div>
+            <div class="elder-detail">
+              <div class="en">คุณยายสมหมาย</div>
+              <div class="es">
+                <div class="online-dot"></div>
+                อุปกรณ์ออนไลน์ · ตื่นแล้ว 06:12 น.
+              </div>
+            </div>
+            <div
+              style="margin-left:auto; background:rgba(255,255,255,.15); border-radius:8px; padding:5px 10px; cursor:pointer;"
+              onclick="switchTab2('chat')">
+              <div style="font-size:11px; color:white; font-weight:600;">💬 แชท</div>
+            </div>
+          </div>
+        </div>
 
-        <!-- TOP NAV -->
-        <nav class="top-nav">
-            <div class="nav-left">
-                <div class="nav-heart-icon">
-                    <svg viewBox="0 0 100 100" width="28" height="28">
-                        <path
-                            d="M50 88 C25 65, 0 45, 0 28 C0 12, 12 0, 28 0 C38 0, 46 6, 50 14 C54 6, 62 0, 72 0 C88 0, 100 12, 100 28 C100 45, 75 65, 50 88Z"
-                            fill="url(#navHeartGrad)" />
-                        <defs>
-                            <linearGradient id="navHeartGrad" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0%" stop-color="#FF6B6B" />
-                                <stop offset="100%" stop-color="#FFC857" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
+        <div class="scroll-area">
+          <div class="home-body">
+            <!-- ALERT -->
+            <div class="alert-banner">
+              <div class="ab-icon">⚠️</div>
+              <div class="ab-text">
+                <div class="at">ยังไม่ได้ยืนยันการทานยา</div>
+                <div class="as">ยากลางวัน 12:00 น. — ไม่มีการตอบสนอง</div>
+              </div>
+              <div class="ab-arr">›</div>
+            </div>
+
+            <!-- STATS -->
+            <div class="sec-head">
+              <div class="sec-title">📊 สรุปวันนี้</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-pill">
+                <div class="stat-pill-top">
+                  <div class="sp-icon or">💊</div>
+                  <div class="sp-badge badge-warn">3/4</div>
                 </div>
-                <span class="nav-brand">Aoon-Jai</span>
-            </div>
-            <div class="nav-right">
-                <div class="streak-badge" id="streak-badge">
-                    <span class="streak-fire">🔥</span>
-                    <span class="streak-count" id="streak-count">5</span>
+                <div class="sp-num">75%</div>
+                <div class="sp-label">ทานยาครบ</div>
+              </div>
+              <div class="stat-pill">
+                <div class="stat-pill-top">
+                  <div class="sp-icon gr">🤸</div>
+                  <div class="sp-badge badge-ok">ทำแล้ว</div>
                 </div>
-                <button class="nav-avatar" id="nav-avatar" aria-label="Profile">
-                    <span>อ</span>
-                </button>
-            </div>
-        </nav>
-
-        <!-- ===== PARENT CARD ===== -->
-        <section class="parent-section" id="parent-section">
-            <div class="parent-card">
-                <div class="parent-avatar-ring">
-                    <div class="parent-avatar">
-                        <span>👵</span>
-                    </div>
-                    <div class="status-dot active" title="Active"></div>
+                <div class="sp-num">1/2</div>
+                <div class="sp-label">ออกกำลังกาย</div>
+              </div>
+              <div class="stat-pill" onclick="switchTab2('chat')">
+                <div class="stat-pill-top">
+                  <div class="sp-icon re">🎙️</div>
+                  <div class="sp-badge badge-alert">ใหม่!</div>
                 </div>
-                <div class="parent-info">
-                    <h2 class="parent-name">คุณยายสมศรี</h2>
-                    <p class="parent-relation">ยาย · เชียงใหม่</p>
+                <div class="sp-num">2</div>
+                <div class="sp-label">ข้อความจากยาย</div>
+              </div>
+              <div class="stat-pill">
+                <div class="stat-pill-top">
+                  <div class="sp-icon bl">📅</div>
+                  <div class="sp-badge badge-warn">พรุ่งนี้</div>
                 </div>
-                <div class="parent-activity">
-                    <div class="activity-pill">
-                        <span class="activity-icon">👁</span>
-                        <span>ดู 3 ข้อความวันนี้</span>
-                    </div>
+                <div class="sp-num">1</div>
+                <div class="sp-label">นัดหมาย</div>
+              </div>
+            </div>
+
+            <!-- TIMELINE -->
+            <div class="sec-head mt8">
+              <div class="sec-title">📋 กิจวัตรวันนี้</div>
+              <div class="sec-more">ดูทั้งหมด</div>
+            </div>
+            <div class="tl">
+              <div class="tl-row">
+                <div class="tl-t">07:00</div>
+                <div class="tl-d done">✓</div>
+                <div class="tl-c done">
+                  <div class="tl-name">💊 ทานยาเช้า</div>
+                  <div class="tl-sub">Amlodipine + Vitamin D</div>
+                  <div class="tl-tag t-done">ยืนยันแล้ว 07:04 น.</div>
                 </div>
-            </div>
-        </section>
-
-        <!-- ===== HEART PULSE ===== -->
-        <section class="pulse-section">
-            <button class="heart-pulse-btn" id="heart-pulse-btn" aria-label="Send Heart Pulse">
-                <div class="pulse-ring pulse-ring-1"></div>
-                <div class="pulse-ring pulse-ring-2"></div>
-                <div class="pulse-ring pulse-ring-3"></div>
-                <div class="heart-icon-inner">
-                    <svg viewBox="0 0 100 100" width="44" height="44">
-                        <path
-                            d="M50 88 C25 65, 0 45, 0 28 C0 12, 12 0, 28 0 C38 0, 46 6, 50 14 C54 6, 62 0, 72 0 C88 0, 100 12, 100 28 C100 45, 75 65, 50 88Z"
-                            fill="#fff" />
-                    </svg>
+              </div>
+              <div class="tl-row">
+                <div class="tl-t">09:30</div>
+                <div class="tl-d done">✓</div>
+                <div class="tl-c done">
+                  <div class="tl-name">🤸 ออกกำลังกาย</div>
+                  <div class="tl-sub">ยืดเส้น 15 นาที</div>
+                  <div class="tl-tag t-done">ยืนยันแล้ว 09:47 น.</div>
                 </div>
-            </button>
-            <p class="pulse-label" id="pulse-label">แตะเพื่อส่งความคิดถึง</p>
-        </section>
-
-        <!-- ===== QUICK ACTIONS ===== -->
-        <section class="actions-section" id="actions-section">
-            <h3 class="section-title">ส่งความรัก</h3>
-            <div class="action-grid">
-                <button class="action-card" id="action-photo" data-type="photo">
-                    <div class="action-icon-wrap photo-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                            <circle cx="8.5" cy="8.5" r="1.5" />
-                            <polyline points="21 15 16 10 5 21" />
-                        </svg>
-                    </div>
-                    <span class="action-label">รูปภาพ</span>
-                </button>
-                <button class="action-card" id="action-voice" data-type="voice">
-                    <div class="action-icon-wrap voice-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                            <line x1="12" y1="19" x2="12" y2="23" />
-                            <line x1="8" y1="23" x2="16" y2="23" />
-                        </svg>
-                    </div>
-                    <span class="action-label">เสียง</span>
-                </button>
-                <button class="action-card" id="action-video" data-type="video">
-                    <div class="action-icon-wrap video-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="23 7 16 12 23 17 23 7" />
-                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-                        </svg>
-                    </div>
-                    <span class="action-label">วิดีโอ</span>
-                </button>
-                <button class="action-card" id="action-text" data-type="text">
-                    <div class="action-icon-wrap text-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                        </svg>
-                    </div>
-                    <span class="action-label">ข้อความ</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- ===== CONTENT FEED ===== -->
-        <section class="feed-section" id="feed-section">
-            <div class="feed-header">
-                <h3 class="section-title">ความรักที่ส่งไปแล้ว</h3>
-                <button class="filter-btn" id="filter-btn">ทั้งหมด ▾</button>
+              </div>
+              <div class="tl-row">
+                <div class="tl-t">12:00</div>
+                <div class="tl-d miss">✗</div>
+                <div class="tl-c miss">
+                  <div class="tl-name">💊 ทานยากลางวัน</div>
+                  <div class="tl-sub">Metformin 500mg</div>
+                  <div class="tl-tag t-miss">ไม่มีการยืนยัน</div>
+                </div>
+              </div>
+              <div class="tl-row">
+                <div class="tl-t">14:00</div>
+                <div class="tl-d pend">○</div>
+                <div class="tl-c pend">
+                  <div class="tl-name">🥛 ดื่มน้ำ</div>
+                  <div class="tl-sub">น้ำเปล่าอย่างน้อย 1 แก้ว</div>
+                  <div class="tl-tag t-pend">รอการยืนยัน</div>
+                </div>
+              </div>
+              <div class="tl-row">
+                <div class="tl-t">18:00</div>
+                <div class="tl-d up">·</div>
+                <div class="tl-c up">
+                  <div class="tl-name">💊 ทานยาเย็น</div>
+                  <div class="tl-sub">Amlodipine 5mg</div>
+                  <div class="tl-tag t-up">ยังไม่ถึงเวลา</div>
+                </div>
+              </div>
             </div>
 
-            <div class="feed-list" id="feed-list">
-                <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════
+       CHAT SCREEN
+  ════════════════════ -->
+      <div class="screen" id="screen-chat">
+        <div class="chat-header">
+          <div class="chat-header-row">
+            <div class="chat-ava">👵</div>
+            <div class="chat-hinfo">
+              <div class="chat-hname">คุณยายสมหมาย</div>
+              <div class="chat-hstatus">
+                <div class="online-dot"></div> ออนไลน์อยู่
+              </div>
             </div>
-        </section>
+            <button class="chat-hmenu">⋯</button>
+          </div>
+        </div>
 
-        <!-- ===== ACTIVITY LOG ===== -->
-        <section class="activity-section" id="activity-section">
-            <h3 class="section-title">กิจกรรมของคุณยาย</h3>
-            <div class="activity-timeline" id="activity-timeline">
-                <!-- Populated by JS -->
+        <!-- MESSAGES -->
+        <div class="chat-messages" id="chatMessages">
+
+          <div class="date-div"><span>วันอาทิตย์ 9 มี.ค.</span></div>
+
+          <!-- them: voice -->
+          <div class="bubble-wrap them">
+            <div class="sender-name">คุณยายสมหมาย</div>
+            <div class="bubble-row">
+              <div class="b-ava elder">👵</div>
+              <div class="voice-bubble" onclick="playVoice(this)">
+                <button class="vb-play">▶</button>
+                <div class="vb-wave" id="wave1">
+                  <div class="vb-bar" style="height:8px"></div>
+                  <div class="vb-bar" style="height:18px"></div>
+                  <div class="vb-bar" style="height:26px"></div>
+                  <div class="vb-bar" style="height:14px"></div>
+                  <div class="vb-bar" style="height:22px"></div>
+                  <div class="vb-bar" style="height:10px"></div>
+                  <div class="vb-bar" style="height:20px"></div>
+                  <div class="vb-bar" style="height:16px"></div>
+                  <div class="vb-bar" style="height:24px"></div>
+                  <div class="vb-bar" style="height:8px"></div>
+                  <div class="vb-bar" style="height:18px"></div>
+                  <div class="vb-bar" style="height:12px"></div>
+                </div>
+                <div class="vb-dur">0:14</div>
+              </div>
             </div>
-        </section>
+            <div class="bubble-meta">20:14</div>
+          </div>
 
-        <!-- ===== BOTTOM NAV ===== -->
-        <nav class="bottom-nav" id="bottom-nav">
-            <button class="bnav-item active" data-tab="home" aria-label="Home">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                <span>หน้าหลัก</span>
-            </button>
-            <button class="bnav-item" data-tab="schedule" aria-label="Schedule">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                <span>ตารางเวลา</span>
-            </button>
-            <button class="bnav-item" data-tab="activity" aria-label="Activity">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>
-                <span>กิจกรรม</span>
-            </button>
-            <button class="bnav-item" data-tab="settings" aria-label="Settings">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3" />
-                    <path
-                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                </svg>
-                <span>ตั้งค่า</span>
-            </button>
-        </nav>
-    </div>
+          <!-- me: text -->
+          <div class="bubble-wrap me">
+            <div class="bubble-row">
+              <div class="bubble">รับทราบแล้วนะคะยาย หนูจะแจ้งเตือนให้นะคะ 💛</div>
+              <div class="b-ava me">ม</div>
+            </div>
+            <div class="bubble-meta">20:16 <span class="read-tick">✓✓</span></div>
+          </div>
 
-    <!-- ===== UPLOAD MODAL ===== -->
-    <div class="modal-overlay" id="upload-modal" role="dialog" aria-modal="true" aria-label="Upload content">
+          <!-- them: image -->
+          <div class="bubble-wrap them">
+            <div class="bubble-row">
+              <div class="b-ava elder">👵</div>
+              <div class="img-bubble">
+                <div
+                  style="width:200px; height:140px; background:linear-gradient(135deg,#d4c5b2,#c5b09a); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px;">
+                  <div style="font-size:36px;">🌺</div>
+                  <div style="font-size:12px; color:#6b5040; font-weight:600;">ดอกไม้หน้าบ้าน</div>
+                </div>
+              </div>
+            </div>
+            <div class="bubble-meta">20:18</div>
+          </div>
+
+          <!-- me: text -->
+          <div class="bubble-wrap me">
+            <div class="bubble-row">
+              <div class="bubble">ว้าว สวยมากเลยนะคะยาย 😍🌸</div>
+              <div class="b-ava me">ม</div>
+            </div>
+            <div class="bubble-meta">20:19 <span class="read-tick">✓✓</span></div>
+          </div>
+
+          <div class="date-div"><span>เมื่อวาน</span></div>
+
+          <!-- me: image -->
+          <div class="bubble-wrap me">
+            <div class="bubble-row">
+              <div class="bubble">ยายดูคลิปออกกำลังกายนี้ได้เลยนะคะ หนูส่งให้ผ่านอุปกรณ์แล้ว 🤸</div>
+              <div class="b-ava me">ม</div>
+            </div>
+            <div class="bubble-meta">09:30 <span class="read-tick">✓✓</span></div>
+          </div>
+
+          <!-- them: text -->
+          <div class="bubble-wrap them">
+            <div class="bubble-row">
+              <div class="b-ava elder">👵</div>
+              <div class="bubble">ขอบคุณนะลูก ยายทำตามได้เลย ดีมากเลย 😊</div>
+            </div>
+            <div class="bubble-meta">09:45</div>
+          </div>
+
+          <div class="sys-msg">📋 แจ้งเตือน: คุณยายยืนยันการทานยาเช้าแล้ว ✓</div>
+
+          <!-- them: voice -->
+          <div class="bubble-wrap them">
+            <div class="sender-name">คุณยายสมหมาย</div>
+            <div class="bubble-row">
+              <div class="b-ava elder">👵</div>
+              <div class="voice-bubble" onclick="playVoice(this)">
+                <button class="vb-play">▶</button>
+                <div class="vb-wave">
+                  <div class="vb-bar" style="height:12px"></div>
+                  <div class="vb-bar" style="height:20px"></div>
+                  <div class="vb-bar" style="height:16px"></div>
+                  <div class="vb-bar" style="height:24px"></div>
+                  <div class="vb-bar" style="height:10px"></div>
+                  <div class="vb-bar" style="height:18px"></div>
+                  <div class="vb-bar" style="height:22px"></div>
+                  <div class="vb-bar" style="height:8px"></div>
+                  <div class="vb-bar" style="height:14px"></div>
+                  <div class="vb-bar" style="height:20px"></div>
+                  <div class="vb-bar" style="height:16px"></div>
+                  <div class="vb-bar" style="height:12px"></div>
+                </div>
+                <div class="vb-dur">0:08</div>
+              </div>
+            </div>
+            <div class="bubble-meta">14:22 · ยังไม่ฟัง</div>
+          </div>
+
+          <div class="date-div"><span>วันนี้</span></div>
+
+          <!-- them: voice (unread) -->
+          <div class="bubble-wrap them">
+            <div class="sender-name">คุณยายสมหมาย</div>
+            <div class="bubble-row">
+              <div class="b-ava elder">👵</div>
+              <div class="voice-bubble" onclick="playVoice(this)">
+                <button class="vb-play">▶</button>
+                <div class="vb-wave">
+                  <div class="vb-bar" style="height:10px"></div>
+                  <div class="vb-bar" style="height:22px"></div>
+                  <div class="vb-bar" style="height:18px"></div>
+                  <div class="vb-bar" style="height:28px"></div>
+                  <div class="vb-bar" style="height:14px"></div>
+                  <div class="vb-bar" style="height:20px"></div>
+                  <div class="vb-bar" style="height:24px"></div>
+                  <div class="vb-bar" style="height:12px"></div>
+                  <div class="vb-bar" style="height:18px"></div>
+                  <div class="vb-bar" style="height:22px"></div>
+                  <div class="vb-bar" style="height:10px"></div>
+                  <div class="vb-bar" style="height:16px"></div>
+                </div>
+                <div class="vb-dur">0:22</div>
+              </div>
+            </div>
+            <div class="bubble-meta" style="color:var(--amber-d); font-weight:700;">10:32 · ยังไม่ฟัง 🔴</div>
+          </div>
+
+          <div class="sys-msg">📋 แจ้งเตือน: คุณยายยืนยันการออกกำลังกายแล้ว ✓</div>
+
+        </div>
+
+        <!-- INPUT BAR -->
+        <div class="chat-input-bar">
+          <div class="attach-panel" id="attachPanel">
+            <div class="attach-opts">
+              <div class="attach-opt" onclick="sendPhoto()">
+                <div class="ao-icon photo">🖼️</div>
+                <div class="ao-label">รูปภาพ</div>
+              </div>
+              <div class="attach-opt" onclick="sendVideo()">
+                <div class="ao-icon video">🎬</div>
+                <div class="ao-label">วิดีโอ</div>
+              </div>
+              <div class="attach-opt" onclick="startVoiceRec()">
+                <div class="ao-icon voice">🎙️</div>
+                <div class="ao-label">เสียง</div>
+              </div>
+              <div class="attach-opt" onclick="sendRemind()">
+                <div class="ao-icon remind">⏰</div>
+                <div class="ao-label">การแจ้งเตือน</div>
+              </div>
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="input-attach" id="attachBtn" onclick="toggleAttach()">＋</div>
+            <div class="input-wrap">
+              <textarea class="chat-input" id="chatInput" rows="1" placeholder="พิมพ์ข้อความถึงคุณยาย..."
+                oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+            </div>
+            <button class="send-icon-btn" onclick="sendMsg()">➤</button>
+          </div>
+        </div>
+
+        <!-- VOICE RECORDING OVERLAY -->
+        <div class="voice-rec-overlay" id="voiceOverlay">
+          <div class="vro-wave">
+            <div class="vro-bar"></div>
+            <div class="vro-bar"></div>
+            <div class="vro-bar"></div>
+            <div class="vro-bar"></div>
+            <div class="vro-bar"></div>
+            <div class="vro-bar"></div>
+            <div class="vro-bar"></div>
+          </div>
+          <div class="vro-text">กำลังบันทึกเสียง...</div>
+          <div class="vro-timer" id="recTimer">0:00</div>
+          <button class="vro-cancel" onclick="cancelVoice()">✕ ยกเลิก</button>
+        </div>
+      </div>
+
+      <!-- ════════════════════
+       REMINDERS SCREEN
+  ════════════════════ -->
+      <div class="screen" id="screen-remind">
+        <div class="app-header">
+          <div class="header-row">
+            <div class="header-title">
+              <div>⏰ การแจ้งเตือน</div>
+              <div class="header-subtitle">คุณยายสมหมาย</div>
+            </div>
+            <button class="header-back" style="background:rgba(255,255,255,.12);" onclick="openModal()">＋</button>
+          </div>
+        </div>
+        <div class="scroll-area">
+          <div class="remind-body">
+            <div class="remind-section">
+              <div class="remind-sec-title">ยา & สุขภาพ</div>
+              <div class="remind-list">
+                <div class="remind-item">
+                  <div class="ri-ic ri-med2">💊</div>
+                  <div class="ri-info">
+                    <div class="ri-name">ยาเช้า (Amlodipine + Vit D)</div>
+                    <div class="ri-time">ทุกวัน · 07:00 น.</div>
+                  </div>
+                  <div class="toggle" onclick="tog(this)">
+                    <div class="toggle-k"></div>
+                  </div>
+                </div>
+                <div class="remind-item">
+                  <div class="ri-ic ri-med2">💊</div>
+                  <div class="ri-info">
+                    <div class="ri-name">ยากลางวัน (Metformin)</div>
+                    <div class="ri-time">ทุกวัน · 12:00 น.</div>
+                  </div>
+                  <div class="toggle" onclick="tog(this)">
+                    <div class="toggle-k"></div>
+                  </div>
+                </div>
+                <div class="remind-item">
+                  <div class="ri-ic ri-med2">💊</div>
+                  <div class="ri-info">
+                    <div class="ri-name">ยาเย็น (Amlodipine)</div>
+                    <div class="ri-time">ทุกวัน · 18:00 น.</div>
+                  </div>
+                  <div class="toggle" onclick="tog(this)">
+                    <div class="toggle-k"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="remind-section">
+              <div class="remind-sec-title">กิจวัตรประจำวัน</div>
+              <div class="remind-list">
+                <div class="remind-item">
+                  <div class="ri-ic ri-wat">🥛</div>
+                  <div class="ri-info">
+                    <div class="ri-name">ดื่มน้ำ</div>
+                    <div class="ri-time">ทุกวัน · 08:00, 14:00, 19:00 น.</div>
+                  </div>
+                  <div class="toggle" onclick="tog(this)">
+                    <div class="toggle-k"></div>
+                  </div>
+                </div>
+                <div class="remind-item">
+                  <div class="ri-ic ri-exe">🤸</div>
+                  <div class="ri-info">
+                    <div class="ri-name">ออกกำลังกาย — ยืดเส้น</div>
+                    <div class="ri-time">จันทร์–ศุกร์ · 09:30 น.</div>
+                  </div>
+                  <div class="toggle" onclick="tog(this)">
+                    <div class="toggle-k"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="remind-section">
+              <div class="remind-sec-title">นัดหมาย</div>
+              <div class="remind-list">
+                <div class="remind-item">
+                  <div class="ri-ic ri-apt">🏥</div>
+                  <div class="ri-info">
+                    <div class="ri-name">พบแพทย์ รพ.ขอนแก่น</div>
+                    <div class="ri-time">12 มี.ค. 2569 · 09:00 น.</div>
+                  </div>
+                  <div class="toggle" onclick="tog(this)">
+                    <div class="toggle-k"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="add-remind-btn" onclick="openModal()">➕ เพิ่มการแจ้งเตือนใหม่</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════
+       STATS SCREEN
+  ════════════════════ -->
+      <div class="screen" id="screen-stats">
+        <div class="app-header">
+          <div class="header-row">
+            <div class="header-title">
+              <div>📊 รายงานสุขภาพ</div>
+              <div class="header-subtitle">7 วันย้อนหลัง</div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-area">
+          <div class="stats-body">
+
+            <div class="stat-big-card">
+              <div class="sbc-title">💊 การรับประทานยา</div>
+              <div class="prog-row">
+                <div class="prog-item">
+                  <div class="prog-top">
+                    <span class="prog-label">ยาเช้า</span>
+                    <span class="prog-val g">85%</span>
+                  </div>
+                  <div class="prog-bar">
+                    <div class="prog-fill pf-g" style="width:85%"></div>
+                  </div>
+                </div>
+                <div class="prog-item">
+                  <div class="prog-top">
+                    <span class="prog-label">ยากลางวัน</span>
+                    <span class="prog-val o">57%</span>
+                  </div>
+                  <div class="prog-bar">
+                    <div class="prog-fill pf-o" style="width:57%"></div>
+                  </div>
+                </div>
+                <div class="prog-item">
+                  <div class="prog-top">
+                    <span class="prog-label">ยาเย็น</span>
+                    <span class="prog-val g">100%</span>
+                  </div>
+                  <div class="prog-bar">
+                    <div class="prog-fill pf-g" style="width:100%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-big-card">
+              <div class="sbc-title">🤸 การออกกำลังกาย</div>
+              <div class="prog-row">
+                <div class="prog-item">
+                  <div class="prog-top">
+                    <span class="prog-label">5 วันที่ผ่านมา (จ-ศ)</span>
+                    <span class="prog-val o">60%</span>
+                  </div>
+                  <div class="prog-bar">
+                    <div class="prog-fill pf-o" style="width:60%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="bar-chart" style="margin-top:16px;">
+                <div class="bc-col">
+                  <div class="bc-bar" style="height:50px;background:var(--sage);"></div>
+                  <div class="bc-label">จ</div>
+                </div>
+                <div class="bc-col">
+                  <div class="bc-bar" style="height:40px;background:var(--sage);"></div>
+                  <div class="bc-label">อ</div>
+                </div>
+                <div class="bc-col">
+                  <div class="bc-bar" style="height:20px;background:var(--amber-l);"></div>
+                  <div class="bc-label">พ</div>
+                </div>
+                <div class="bc-col">
+                  <div class="bc-bar" style="height:46px;background:var(--sage);"></div>
+                  <div class="bc-label">พฤ</div>
+                </div>
+                <div class="bc-col">
+                  <div class="bc-bar" style="height:12px;background:var(--terra);"></div>
+                  <div class="bc-label">ศ</div>
+                </div>
+                <div class="bc-col">
+                  <div class="bc-bar" style="height:44px;background:var(--sage);"></div>
+                  <div class="bc-label">ส</div>
+                </div>
+                <div class="bc-col">
+                  <div class="bc-bar" style="height:30px;background:var(--amber-l);"></div>
+                  <div class="bc-label" style="font-weight:700;">วันนี้</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-big-card">
+              <div class="sbc-title">🥛 การดื่มน้ำ</div>
+              <div class="prog-row">
+                <div class="prog-item">
+                  <div class="prog-top">
+                    <span class="prog-label">สัปดาห์นี้</span>
+                    <span class="prog-val g">92%</span>
+                  </div>
+                  <div class="prog-bar">
+                    <div class="prog-fill pf-g" style="width:92%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-big-card" style="background:rgba(201,97,74,.06); border-color:rgba(201,97,74,.25);">
+              <div class="sbc-title" style="color:var(--terra);">⚠️ ต้องติดตาม</div>
+              <div style="font-size:13px; color:var(--text-2); line-height:1.7;">
+                • ยากลางวัน — พลาดบ่อยที่สุด<br>
+                • วันศุกร์ — ไม่ออกกำลังกาย<br>
+                • แนะนำ: โทรหาคุณยาย 12:00 น.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════
+       BOTTOM NAVIGATION
+  ════════════════════ -->
+      <nav class="bottom-nav">
+        <button class="nav-tab active" id="tab-home" onclick="switchTab2('home')">
+          <div class="nav-icon-wrap">
+            <div class="ni">🏠</div>
+          </div>
+          <div class="nl">หน้าแรก</div>
+        </button>
+        <button class="nav-tab" id="tab-chat" onclick="switchTab2('chat')">
+          <div class="nav-icon-wrap">
+            <div class="ni">💬</div>
+            <div class="nav-badge">2</div>
+          </div>
+          <div class="nl">แชท</div>
+        </button>
+        <button class="nav-tab" id="tab-remind" onclick="switchTab2('remind')">
+          <div class="nav-icon-wrap">
+            <div class="ni">⏰</div>
+          </div>
+          <div class="nl">แจ้งเตือน</div>
+        </button>
+        <button class="nav-tab" id="tab-stats" onclick="switchTab2('stats')">
+          <div class="nav-icon-wrap">
+            <div class="ni">📊</div>
+          </div>
+          <div class="nl">รายงาน</div>
+        </button>
+      </nav>
+
+      <!-- MODAL SHEET -->
+      <div class="modal-overlay" id="modalOverlay" onclick="closeModalOut(event)">
         <div class="modal-sheet">
-            <div class="modal-handle"></div>
-            <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">ส่งรูปภาพ</h3>
-                <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+          <div class="sheet-handle" onclick="closeModal()"></div>
+          <div class="sheet-title">⏰ เพิ่มการแจ้งเตือน</div>
+          <div class="form-g">
+            <label class="form-lbl">เลือกไอคอน</label>
+            <div class="icon-grid">
+              <div class="icon-chip sel" onclick="selIcon(this)">💊</div>
+              <div class="icon-chip" onclick="selIcon(this)">🥛</div>
+              <div class="icon-chip" onclick="selIcon(this)">🤸</div>
+              <div class="icon-chip" onclick="selIcon(this)">🏥</div>
+              <div class="icon-chip" onclick="selIcon(this)">🍽️</div>
+              <div class="icon-chip" onclick="selIcon(this)">🧘</div>
+              <div class="icon-chip" onclick="selIcon(this)">📞</div>
+              <div class="icon-chip" onclick="selIcon(this)">🌿</div>
             </div>
-
-            <div class="modal-body">
-                <!-- PHOTO UPLOAD -->
-                <div class="upload-zone" id="upload-zone">
-                    <div class="upload-zone-inner" id="upload-drop-zone">
-                        <div class="upload-icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="17 8 12 3 7 8" />
-                                <line x1="12" y1="3" x2="12" y2="15" />
-                            </svg>
-                        </div>
-                        <p class="upload-text">แตะเพื่อเลือกไฟล์</p>
-                        <p class="upload-hint">รองรับ JPG, PNG, MP4 (สูงสุด 50MB)</p>
-                        <input type="file" id="file-input" accept="image/*,video/*" class="sr-only">
-                    </div>
-                </div>
-
-                <!-- VOICE RECORDER -->
-                <div class="voice-recorder hidden" id="voice-recorder">
-                    <div class="recorder-visualizer" id="recorder-visualizer">
-                        <div class="visualizer-bars">
-                            <span></span><span></span><span></span><span></span><span></span>
-                            <span></span><span></span><span></span><span></span><span></span>
-                            <span></span><span></span><span></span><span></span><span></span>
-                            <span></span><span></span><span></span><span></span><span></span>
-                        </div>
-                    </div>
-                    <p class="recorder-timer" id="recorder-timer">0:00</p>
-                    <p class="recorder-hint">สูงสุด 60 วินาที</p>
-                    <button class="record-btn" id="record-btn" aria-label="Record">
-                        <div class="record-dot" id="record-dot"></div>
-                    </button>
-                    <p class="record-label" id="record-label">แตะเพื่อบันทึก</p>
-                </div>
-
-                <!-- PREVIEW -->
-                <div class="preview-area hidden" id="preview-area">
-                    <img id="preview-img" class="preview-img hidden" alt="Preview">
-                    <video id="preview-video" class="preview-video hidden" controls></video>
-                    <audio id="preview-audio" class="preview-audio hidden" controls></audio>
-                </div>
-
-                <!-- CAPTION -->
-                <div class="caption-area" id="caption-area">
-                    <textarea class="caption-input" id="caption-input"
-                        placeholder="เขียนข้อความให้คุณยาย... (ไม่จำเป็น)" rows="2" maxlength="200"></textarea>
-                    <div class="caption-counter"><span id="char-count">0</span>/200</div>
-                </div>
-
-                <!-- QUICK MESSAGES -->
-                <div class="quick-messages" id="quick-messages">
-                    <button class="quick-msg" data-msg="คิดถึงนะคะ ❤️">คิดถึงนะคะ ❤️</button>
-                    <button class="quick-msg" data-msg="สวัสดีตอนเช้าค่ะ ☀️">สวัสดีตอนเช้าค่ะ ☀️</button>
-                    <button class="quick-msg" data-msg="ทานข้าวหรือยังคะ 🍚">ทานข้าวหรือยังคะ 🍚</button>
-                    <button class="quick-msg" data-msg="รักนะคะ 💕">รักนะคะ 💕</button>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="schedule-btn" id="schedule-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                    ตั้งเวลา
-                </button>
-                <button class="send-btn" id="send-btn">
-                    ส่งเลย
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="22" y1="2" x2="11" y2="13" />
-                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                    </svg>
-                </button>
-            </div>
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">ชื่อกิจกรรม</label>
+            <input type="text" class="form-inp" placeholder="เช่น ทานยาเย็น, ออกกำลังกาย">
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">เวลา</label>
+            <input type="time" class="form-inp" value="08:00">
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">ทำซ้ำ</label>
+            <select class="form-inp">
+              <option>ทุกวัน</option>
+              <option>วันจันทร์–ศุกร์</option>
+              <option>ครั้งเดียว</option>
+            </select>
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">รายละเอียด (ไม่บังคับ)</label>
+            <input type="text" class="form-inp" placeholder="เช่น ทานหลังอาหาร 500mg">
+          </div>
+          <div class="btn-row">
+            <button class="btn-cancel2" onclick="closeModal()">ยกเลิก</button>
+            <button class="btn-save2" onclick="saveRemind()">💾 บันทึก</button>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- ===== SCHEDULE MODAL ===== -->
-    <div class="modal-overlay" id="schedule-modal" role="dialog" aria-modal="true" aria-label="Schedule content">
-        <div class="modal-sheet schedule-sheet">
-            <div class="modal-handle"></div>
-            <div class="modal-header">
-                <h3 class="modal-title">ตั้งเวลาส่ง</h3>
-                <button class="modal-close schedule-close" aria-label="Close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="schedule-form">
-                    <div class="schedule-field">
-                        <label for="schedule-date">📅 วันที่</label>
-                        <input type="date" id="schedule-date" class="schedule-input">
-                    </div>
-                    <div class="schedule-field">
-                        <label for="schedule-time">⏰ เวลา</label>
-                        <input type="time" id="schedule-time" class="schedule-input" value="07:00">
-                    </div>
-                    <div class="schedule-suggestion">
-                        <p>💡 แนะนำ: 07:00 น. — ช่วงเช้าคุณยายตื่นนอนแล้ว</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="send-btn schedule-confirm" id="schedule-confirm">
-                    ✅ ยืนยันตั้งเวลา
-                </button>
-            </div>
+      <!-- TOAST -->
+      <div class="toast" id="toast"></div>
+
+    </div>
+  </div>
+
+  <script>
+
+    // ── Preload/Splash ──
+    function initSplash() {
+      const splash = document.getElementById('splash-screen');
+      if(splash) {
+        setTimeout(() => {
+          splash.classList.add('fade-out');
+          setTimeout(() => {
+            splash.style.display = 'none';
+          }, 600);
+        }, 2200);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', initSplash);
+
+    // ── Navigation ──
+    function switchTab2(name) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('screen-' + name).classList.add('active');
+      document.getElementById('tab-' + name).classList.add('active');
+      if (name === 'chat') {
+        setTimeout(() => {
+          const m = document.getElementById('chatMessages');
+          m.scrollTop = m.scrollHeight;
+        }, 50);
+        // clear badge
+        const badge = document.querySelector('#tab-chat .nav-badge');
+        if (badge) badge.style.display = 'none';
+      }
+    }
+
+    // ── Chat ──
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+    }
+
+    function handleKey(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMsg();
+      }
+    }
+
+    let attachOpen = false;
+    function toggleAttach() {
+      attachOpen = !attachOpen;
+      const p = document.getElementById('attachPanel');
+      const b = document.getElementById('attachBtn');
+      p.classList.toggle('open', attachOpen);
+      b.textContent = attachOpen ? '✕' : '＋';
+      b.style.background = attachOpen ? 'var(--amber)' : '';
+      b.style.color = attachOpen ? 'white' : '';
+      b.style.borderColor = attachOpen ? 'var(--amber)' : '';
+    }
+
+    function closeAttach() {
+      if (attachOpen) toggleAttach();
+    }
+
+    function appendMsg(html) {
+      const m = document.getElementById('chatMessages');
+      m.insertAdjacentHTML('beforeend', html);
+      m.scrollTop = m.scrollHeight;
+    }
+
+    function now() {
+      const d = new Date();
+      return d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0');
+    }
+
+    function sendMsg() {
+      const inp = document.getElementById('chatInput');
+      const txt = inp.value.trim();
+      if (!txt) return;
+      const t = now();
+      appendMsg(`
+    <div class="bubble-wrap me">
+      <div class="bubble-row">
+        <div class="bubble">${txt}</div>
+        <div class="b-ava me">ม</div>
+      </div>
+      <div class="bubble-meta">${t} <span class="read-tick">✓</span></div>
+    </div>
+  `);
+      inp.value = '';
+      inp.style.height = 'auto';
+      closeAttach();
+      // simulate reply
+      setTimeout(() => {
+        appendMsg(`<div class="sys-msg">📱 ส่งข้อความถึงอุปกรณ์ของคุณยายแล้ว</div>`);
+      }, 800);
+    }
+
+    function sendPhoto() {
+      closeAttach();
+      const t = now();
+      appendMsg(`
+    <div class="bubble-wrap me">
+      <div class="bubble-row">
+        <div class="img-bubble" style="border-radius:16px 4px 16px 16px;">
+          <div style="width:180px; height:120px; background:linear-gradient(135deg,#f5c878,#e8a04a); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px;">
+            <div style="font-size:32px;">📷</div>
+            <div style="font-size:11px; color:#5c3d2e; font-weight:600;">รูปภาพที่ส่ง</div>
+          </div>
         </div>
+        <div class="b-ava me">ม</div>
+      </div>
+      <div class="bubble-meta">${t} <span class="read-tick">✓</span></div>
     </div>
+  `);
+      showToast('📸 ส่งรูปภาพแล้ว');
+    }
 
-    <!-- ===== TOAST ===== -->
-    <div class="toast" id="toast" role="alert" aria-live="polite">
-        <span class="toast-icon" id="toast-icon">❤️</span>
-        <span class="toast-text" id="toast-text">ส่งความรักสำเร็จ!</span>
+    function sendVideo() {
+      closeAttach();
+      const t = now();
+      appendMsg(`
+    <div class="bubble-wrap me">
+      <div class="bubble-row">
+        <div class="img-bubble" style="border-radius:16px 4px 16px 16px;">
+          <div style="width:180px; height:120px; background:linear-gradient(135deg,#a8c5ac,#7a9e7e); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; cursor:pointer;">
+            <div style="font-size:32px;">▶️</div>
+            <div style="font-size:11px; color:white; font-weight:600;">วิดีโอออกกำลังกาย</div>
+          </div>
+        </div>
+        <div class="b-ava me">ม</div>
+      </div>
+      <div class="bubble-meta">${t} <span class="read-tick">✓</span></div>
     </div>
+  `);
+      showToast('🎬 ส่งวิดีโอแล้ว');
+    }
 
-    <script src="app.js"></script>
+    function sendRemind() {
+      closeAttach();
+      const t = now();
+      appendMsg(`
+    <div class="bubble-wrap me">
+      <div class="bubble-row">
+        <div style="background:var(--brown); border-radius:18px 4px 18px 18px; padding:12px 14px; max-width:200px; box-shadow:var(--shadow-sm);">
+          <div style="font-size:11px; color:var(--amber-l); font-weight:700; margin-bottom:4px;">📋 การแจ้งเตือน</div>
+          <div style="font-size:13px; color:white; font-weight:600;">💊 ทานยากลางวัน</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6); margin-top:2px;">Metformin 500mg</div>
+          <div style="font-size:10px; color:var(--amber-l); margin-top:6px; font-weight:600;">⏰ ส่งแจ้งเตือนไปยังอุปกรณ์แล้ว</div>
+        </div>
+        <div class="b-ava me">ม</div>
+      </div>
+      <div class="bubble-meta">${t} <span class="read-tick">✓</span></div>
+    </div>
+  `);
+      showToast('⏰ ส่งการแจ้งเตือนแล้ว');
+    }
+
+    // Voice recording
+    let recInt, recSec = 0;
+    function startVoiceRec() {
+      closeAttach();
+      const overlay = document.getElementById('voiceOverlay');
+      overlay.classList.add('show');
+      recSec = 0;
+      document.getElementById('recTimer').textContent = '0:00';
+      recInt = setInterval(() => {
+        recSec++;
+        const m = Math.floor(recSec / 60);
+        const s = String(recSec % 60).padStart(2, '0');
+        document.getElementById('recTimer').textContent = `${m}:${s}`;
+        if (recSec >= 30) stopVoiceRec();
+      }, 1000);
+    }
+
+    function stopVoiceRec() {
+      clearInterval(recInt);
+      const overlay = document.getElementById('voiceOverlay');
+      overlay.classList.remove('show');
+      const dur = `0:${String(recSec).padStart(2, '0')}`;
+      const t = now();
+      const bars = Array.from({ length: 12 }, () => {
+        const h = Math.floor(Math.random() * 20) + 8;
+        return `<div class="vb-bar" style="height:${h}px"></div>`;
+      }).join('');
+      appendMsg(`
+    <div class="bubble-wrap me">
+      <div class="bubble-row">
+        <div class="voice-bubble" style="background:var(--brown); border:1px solid rgba(255,255,255,.1); border-radius:18px 4px 18px 18px;" onclick="playVoice(this)">
+          <button class="vb-play" style="background:var(--amber-l);">▶</button>
+          <div class="vb-wave">${bars}</div>
+          <div class="vb-dur" style="color:rgba(255,255,255,.6);">${dur}</div>
+        </div>
+        <div class="b-ava me">ม</div>
+      </div>
+      <div class="bubble-meta">${t} <span class="read-tick">✓</span></div>
+    </div>
+  `);
+      showToast('🎙️ ส่งข้อความเสียงแล้ว');
+    }
+
+    function cancelVoice() {
+      clearInterval(recInt);
+      document.getElementById('voiceOverlay').classList.remove('show');
+    }
+
+    function playVoice(el) {
+      const btn = el.querySelector('.vb-play');
+      const bars = el.querySelectorAll('.vb-bar');
+      btn.textContent = '⏸';
+      btn.style.background = 'var(--amber-d)';
+      let i = 0;
+      const anim = setInterval(() => {
+        bars.forEach((b, idx) => {
+          b.style.background = idx === i % bars.length ? 'var(--amber-d)' : 'var(--amber-l)';
+        });
+        i++;
+        if (i > bars.length * 3) {
+          clearInterval(anim);
+          btn.textContent = '▶';
+          btn.style.background = 'var(--amber)';
+          bars.forEach(b => b.style.background = 'var(--amber-l)');
+        }
+      }, 100);
+    }
+
+    // ── Reminders ──
+    function tog(el) {
+      el.classList.toggle('off');
+      showToast(el.classList.contains('off') ? '🔕 ปิดการแจ้งเตือนแล้ว' : '🔔 เปิดการแจ้งเตือนแล้ว');
+    }
+
+    // ── Modal ──
+    function openModal() {
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
+    }
+    function closeModalOut(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+    function selIcon(el) {
+      document.querySelectorAll('.icon-chip').forEach(c => c.classList.remove('sel'));
+      el.classList.add('sel');
+    }
+    function saveRemind() {
+      closeModal();
+      showToast('✅ เพิ่มการแจ้งเตือนสำเร็จ');
+    }
+
+    // ── Toast ──
+    let toastTmr;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTmr);
+      toastTmr = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    // Init scroll chat
+    window.addEventListener('load', () => {
+      const m = document.getElementById('chatMessages');
+      m.scrollTop = m.scrollHeight;
+    });
+  </script>
 </body>
 
 </html>
